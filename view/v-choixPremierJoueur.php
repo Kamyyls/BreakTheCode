@@ -18,8 +18,4 @@
             </button>
         </div>
     </form>
-
-    <div class="zone_bouton2">
-        <button class="boutonJouer" name="jouer">Jouer</button>
-    </div>
 </body

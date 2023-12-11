@@ -124,6 +124,7 @@ Class tuile
         for($i=0;$i<5;$i++){
             $x= rand(0,9);
             $tuiles[]=$allTuiles[$x];
+            $allTuiles=$this->deduitTuiles($tuiles,$allTuiles);
         }
         return $tuiles;
     }

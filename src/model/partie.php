@@ -187,18 +187,57 @@ class partie
     }
 
     public function recupererLesCartes(){
-        global $pdo;
-        $requete = $pdo->prepare("SELECT * FROM carte ");
-        $requete->execute();
-        $cartes = $requete->fetch(PDO::FETCH_ASSOC);
+        $lstCartes = get_results("SELECT * FROM carte");
 
+        $Cartes = array();
+        foreach ($lstCartes as $carteData) {
+            $Carte = new Tuile(
+                $carteData['id'],
+                $carteData['question']
+            );
+            $Cartes[] = $Carte ;
+        }
+
+        return $Cartes;
     }
 
+    public function generationDe6Cartes($allCartes){
+        $cartes=[];
+        for($i=0;$i<6;$i++){
+            $x= rand(0,9);
+            $cartes[]=$allCartes[$x];
+            $allCartes=$this->deduitCartes($cartes,$allCartes);
+        }
+        return $cartes;
+    }
+    public function deduitCartes($cartesAdeduire, $allCartes) {
 
+        if (!empty($cartesAdeduire) && is_array($cartesAdeduire) &&
+            !empty($allCartes) && is_array($allCartes)) {
 
+            foreach ($cartesAdeduire as $carteToRemove) {
+
+                foreach ($allCartes as $index => $carte) {
+                    if ($carte->getId() == $carteToRemove->getId()) {
+                        unset($allCartes[$index]);
+                        break;
+                    }
+                }
+            }
+            $allCartes = array_values($allCartes);
+        }
+
+        return $allCartes;
+    }
 
     public function deroulementJeu(){
 
+        //initialisation
+        $tuile = new tuile(1,1,1,"carte_gris_1.png");
+        $allTuiles=$tuile->recupererLesTuiles();
+        $tuilesPremierJoueur = $tuile->generationDe5Tuiles($allTuiles);
+        $tuilesRestantes =$tuile->deduitTuiles($tuilesPremierJoueur,$allTuiles);
+        $tuilesSecondJoueur = $tuile->generationDe5Tuiles($tuilesRestantes);
 
     }
 
